@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --color-bg: #f8f7f3;
+  --color-panel: #ffffff;
+  --color-ink: #111827;
+  --color-muted: #64748b;
+  --color-soft: #f3f2ed;
+  --color-field: #ffffff;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-accent: #d97706;
+  --color-accent-strong: #b45309;
+  --color-accent-soft: #fffbeb;
+  --color-warn: #facc15;
+  --color-warn-soft: #fefce8;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fef2f2;
+  --color-success: #15803d;
+  --color-success-soft: #f0fdf4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  letter-spacing: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+@layer components {
+  .page-shell {
+    @apply mx-auto min-h-screen w-full max-w-7xl px-2 pb-24 pt-2 sm:px-4;
+  }
+
+  .board-panel {
+    @apply border border-line bg-panel;
+  }
+
+  .field-label {
+    @apply mb-1 block text-[15px] font-bold leading-6 text-ink;
+  }
+
+  .field-input {
+    @apply min-h-12 w-full rounded-sm border border-line bg-white px-3 py-3 text-base font-medium leading-6 text-ink outline-none placeholder:text-slate-400 focus:border-accent focus:ring-2 focus:ring-amber-200;
+  }
+
+  .big-button {
+    @apply inline-flex min-h-12 items-center justify-center rounded-sm border border-accent bg-accent px-4 py-3 text-base font-semibold leading-tight text-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.16)] active:translate-y-px disabled:cursor-not-allowed disabled:border-slate-400 disabled:bg-slate-400;
+  }
+
+  .sub-button {
+    @apply inline-flex min-h-11 items-center justify-center rounded-sm border border-line bg-white px-3 py-2 text-sm font-semibold leading-tight text-ink active:translate-y-px disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400;
+  }
+
+  .badge-base {
+    @apply inline-flex items-center rounded-[2px] px-2 py-1 text-[12px] font-semibold leading-tight;
+  }
+
+  .list-row {
+    @apply border-b border-line bg-white active:bg-amber-50;
+  }
+
+  .section-strip {
+    @apply flex min-h-11 items-center justify-between border border-line bg-soft px-3;
+  }
+
+  .sidebar-card {
+    @apply border border-line bg-white;
+  }
+
+  .mobile-fixed-action {
+    @apply fixed inset-x-0 bottom-16 z-30 border-t border-line-strong bg-white/95 p-2 shadow-[0_-8px_20px_rgba(15,23,42,0.08)] sm:static sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none;
+  }
+}
