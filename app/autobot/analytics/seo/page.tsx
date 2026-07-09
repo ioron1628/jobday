@@ -1,72 +1,78 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../jobday_autobot_supabase_client';
-import { SeoAnalytics } from '../../jobday_autobot_types';
+import React, { useEffect, useState } from 'react';
+import { SeoAnalytics } from '../../types/autobot'; // Adjust path as needed
 
-// 모든 SEO 분석 데이터 조회 또는 데이터 생성
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const keyword = searchParams.get("keyword");
-  const startDate = searchParams.get("start_date");
-  const endDate = searchParams.get("end_date");
+const AutobotSeoAnalytics: React.FC = () => {
+  const [seoData, setSeoData] = useState<SeoAnalytics[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  let query = supabase.from("seo_analytics").select("*");
+  useEffect(() => {
+    const fetchSeoData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/autobot/analytics/seo');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: SeoAnalytics[] = await response.json();
+        setSeoData(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (keyword) {
-    query = query.ilike("keyword", `%${keyword}%`);
+    fetchSeoData();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-8">Loading SEO analytics...</div>;
   }
-  if (startDate) {
-    query = query.gte("date", startDate);
-  }
-  if (endDate) {
-    query = query.lte("date", endDate);
-  }
-
-  const { data, error } = await query;
 
   if (error) {
-    console.error("Error fetching SEO analytics:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>;
   }
 
-  return NextResponse.json(data);
-}
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">SEO Analytics</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <thead>
+            <tr>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Date</th>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Keyword</th>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Impressions</th>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Clicks</th>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">CTR</th>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Avg. Position</th>
+            </tr>
+          </thead>
+          <tbody>
+            {seoData.map((dataItem) => (
+              <tr key={dataItem.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{new Date(dataItem.date).toLocaleDateString()}</td>
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{dataItem.keyword || 'N/A'}</td>
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{dataItem.impressions || 0}</td>
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{dataItem.clicks || 0}</td>
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{(dataItem.ctr || 0).toFixed(2)}%</td>
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{(dataItem.avg_position || 0).toFixed(1)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {seoData.length === 0 && (
+        <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+          No SEO analytics data found.
+        </div>
+      )}
+    </div>
+  );
+};
 
-export async function POST(req: NextRequest) {
-  const seoData: Omit<SeoAnalytics, "id" | "created_at"> = await req.json();
-  const { data, error } = await supabase.from("seo_analytics").insert(seoData).select();
-
-  if (error) {
-    console.error("Error creating SEO analytics data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json(data[0], { status: 201 });
-}
-
-// 특정 SEO 분석 데이터 조회, 수정, 삭제 (동적 라우트)
-// 이 파일은 /app/api/autobot/analytics/seo/[id]/route.ts 로 사용될 예정입니다.
-export async function GET_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const { data, error } = await supabase.from("seo_analytics").select("*").eq("id", id).single();
-
-  if (error) {
-    console.error("Error fetching SEO analytics data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-  if (!data) {
-    return NextResponse.json({ error: "SEO analytics data not found" }, { status: 404 });
-  }
-
-  return NextResponse.json(data);
-}
-
-export async function PUT_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const updates: Partial<SeoAnalytics> = await req.json();
-  const { data, error } = await supabase.from("seo_analytics").update(updates).eq("id", id).select();
-
-  if (error) {
-    console.error("Error updating SEO analytics data:", error);
+export default AutobotSeoAnalytics;    console.error("Error updating SEO analytics data:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
   if (!data || data.length === 0) {
