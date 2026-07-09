@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../jobday_autobot_supabase_client';
+import { supabase } from '../../supabaseClient';
 import { Revenue } from '../../jobday_autobot_types';
 
 // 모든 수익 데이터 조회 또는 데이터 생성
