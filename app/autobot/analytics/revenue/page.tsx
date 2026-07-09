@@ -1,89 +1,69 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../jobday_autobot_supabase_client';
-import { Revenue } from '../../jobday_autobot_types';
+import React, { useEffect, useState } from 'react';
+import { Revenue } from '../../types/autobot'; // Adjust path as needed
 
-// 모든 수익 데이터 조회 또는 데이터 생성
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const source = searchParams.get("source");
-  const startDate = searchParams.get("start_date");
-  const endDate = searchParams.get("end_date");
+const AutobotRevenue: React.FC = () => {
+  const [revenueData, setRevenueData] = useState<Revenue[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  let query = supabase.from("revenue").select("*");
+  useEffect(() => {
+    const fetchRevenueData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/autobot/analytics/revenue');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: Revenue[] = await response.json();
+        setRevenueData(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (source) {
-    query = query.eq("source", source);
+    fetchRevenueData();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-8">Loading revenue data...</div>;
   }
-  if (startDate) {
-    query = query.gte("date", startDate);
-  }
-  if (endDate) {
-    query = query.lte("date", endDate);
-  }
-
-  const { data, error } = await query;
 
   if (error) {
-    console.error("Error fetching revenue data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>;
   }
 
-  return NextResponse.json(data);
-}
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Revenue Tracking</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <thead>
+            <tr>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Date</th>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Source</th>
+              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {revenueData.map((dataItem) => (
+              <tr key={dataItem.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{new Date(dataItem.date).toLocaleDateString()}</td>
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">{dataItem.source}</td>
+                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white">${dataItem.amount.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {revenueData.length === 0 && (
+        <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+          No revenue data found.
+        </div>
+      )}
+    </div>
+  );
+};
 
-export async function POST(req: NextRequest) {
-  const revenueData: Omit<Revenue, "id" | "created_at"> = await req.json();
-  const { data, error } = await supabase.from("revenue").insert(revenueData).select();
-
-  if (error) {
-    console.error("Error creating revenue data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json(data[0], { status: 201 });
-}
-
-// 특정 수익 데이터 조회, 수정, 삭제 (동적 라우트)
-// 이 파일은 /app/api/autobot/revenue/[id]/route.ts 로 사용될 예정입니다.
-export async function GET_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const { data, error } = await supabase.from("revenue").select("*").eq("id", id).single();
-
-  if (error) {
-    console.error("Error fetching revenue data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-  if (!data) {
-    return NextResponse.json({ error: "Revenue data not found" }, { status: 404 });
-  }
-
-  return NextResponse.json(data);
-}
-
-export async function PUT_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const updates: Partial<Revenue> = await req.json();
-  const { data, error } = await supabase.from("revenue").update(updates).eq("id", id).select();
-
-  if (error) {
-    console.error("Error updating revenue data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-  if (!data || data.length === 0) {
-    return NextResponse.json({ error: "Revenue data not found or no changes" }, { status: 404 });
-  }
-
-  return NextResponse.json(data[0]);
-}
-
-export async function DELETE_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const { error } = await supabase.from("revenue").delete().eq("id", id);
-
-  if (error) {
-    console.error("Error deleting revenue data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ message: "Revenue data deleted successfully" }, { status: 204 });
-}
+export default AutobotRevenue;
