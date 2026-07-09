@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../jobday_autobot_supabase_client';
-import { SeoAnalytics } from '../../jobday_autobot_types';
+import { supabase } from '../../lib/autobot/supabaseclient';
+import { SeoAnalytics } from '../../types/autobot';
 
 // 모든 SEO 분석 데이터 조회 또는 데이터 생성
 export async function GET(req: NextRequest) {
