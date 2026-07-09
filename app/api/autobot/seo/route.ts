@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../lib/autobot/supabaseclient';
-import { SeoAnalytics } from '../../types/autobot';
+import { supabase } from '../../../../lib/autobot/supabaseClient';
+import { SeoAnalytics } from '../../../../types/autobot';
 
 // 모든 SEO 분석 데이터 조회 또는 데이터 생성
 export async function GET(req: NextRequest) {
