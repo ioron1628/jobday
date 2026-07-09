@@ -1,71 +1,71 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../jobday_autobot_supabase_client';
-import { Review } from '../../jobday_autobot_types';
+import React, { useEffect, useState } from 'react';
+import { Review } from '../../types/autobot'; // Adjust path as needed
 
-// 모든 검수 항목 조회 또는 검수 생성
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const taskId = searchParams.get("task_id");
-  const reviewerId = searchParams.get("reviewer_id");
+const AutobotReviews: React.FC = () => {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  let query = supabase.from("reviews").select("*");
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/autobot/reviews');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: Review[] = await response.json();
+        setReviews(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (taskId) {
-    query = query.eq("task_id", taskId);
-  }
-  if (reviewerId) {
-    query = query.eq("reviewer_id", reviewerId);
-  }
+    fetchReviews();
+  }, []);
 
-  const { data, error } = await query;
+  const handleApprove = async (reviewId: string) => {
+    console.log(`Approving review ${reviewId}`);
+    try {
+      const response = await fetch(`/api/autobot/reviews/${reviewId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'approved' }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setReviews(prevReviews => prevReviews.map(r => r.id === reviewId ? { ...r, status: 'approved' } : r));
+      alert(`Review ${reviewId} approved!`);
+    } catch (err: any) {
+      console.error("Failed to approve review:", err);
+      alert(`Failed to approve review ${reviewId}: ${err.message}`);
+    }
+  };
 
-  if (error) {
-    console.error("Error fetching reviews:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+  const handleReject = async (reviewId: string) => {
+    console.log(`Rejecting review ${reviewId}`);
+    try {
+      const response = await fetch(`/api/autobot/reviews/${reviewId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'rejected' }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setReviews(prevReviews => prevReviews.map(r => r.id === reviewId ? { ...r, status: 'rejected' } : r));
+      alert(`Review ${reviewId} rejected!`);
+    } catch (err: any) {
+      console.error("Failed to reject review:", err);
+      alert(`Failed to reject review ${reviewId}: ${err.message}`);
+    }
+  };
 
-  return NextResponse.json(data);
-}
-
-export async function POST(req: NextRequest) {
-  const review: Omit<Review, "id" | "created_at"> = await req.json();
-  const { data, error } = await supabase.from("reviews").insert(review).select();
-
-  if (error) {
-    console.error("Error creating review:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json(data[0], { status: 201 });
-}
-
-// 특정 검수 항목 조회, 수정, 삭제 (동적 라우트)
-// 이 파일은 /app/api/autobot/reviews/[id]/route.ts 로 사용될 예정입니다.
-export async function GET_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const { data, error } = await supabase.from("reviews").select("*").eq("id", id).single();
-
-  if (error) {
-    console.error("Error fetching review:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-  if (!data) {
-    return NextResponse.json({ error: "Review not found" }, { status: 404 });
-  }
-
-  return NextResponse.json(data);
-}
-
-export async function PUT_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const updates: Partial<Review> = await req.json();
-  const { data, error } = await supabase.from("reviews").update(updates).eq("id", id).select();
-
-  if (error) {
-    console.error("Error updating review:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-  if (!data || data.length === 0) {
+  if (loading) {
+    return <div className="text-center py-8">Loading reviews...</div>;
     return NextResponse.json({ error: "Review not found or no changes" }, { status: 404 });
   }
 
