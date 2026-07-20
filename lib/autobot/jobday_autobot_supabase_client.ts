@@ -1,12 +1,20 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-// Supabase URL과 Anon Key는 환경 변수에서 가져옵니다.
-// JOBDAY 프로젝트의 .env 파일에 SUPABASE_URL과 SUPABASE_ANON_KEY가 설정되어 있다고 가정합니다.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const configuredUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const configuredAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase URL or Anon Key. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env file.');
-}
+// Keep production builds from crashing during route analysis when environment
+// variables are temporarily unavailable. Vercel should still provide the real
+// values in Production and Preview environments.
+const supabaseUrl = configuredUrl ?? "https://placeholder.supabase.co";
+const supabaseAnonKey = configuredAnonKey ?? "placeholder-anon-key";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const isAutobotSupabaseConfigured = Boolean(configuredUrl && configuredAnonKey);
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false
+  }
+});
