@@ -1,5 +1,5 @@
 import React from 'react';
-import { Task } from '../../types/autobot';
+import type { Task } from "@/types/autobot";
 
 interface TaskCardProps {
   task: Task;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Schedule } from '../../types/autobot';
+import type { Schedule } from "@/types/autobot";
 
 interface ScheduleCardProps {
   schedule: Schedule;
