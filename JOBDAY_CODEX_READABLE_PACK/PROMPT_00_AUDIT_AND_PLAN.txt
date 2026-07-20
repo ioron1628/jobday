@@ -1,0 +1,48 @@
+You are the principal product architect, brand and UX lead, staff engineer, and trust-and-safety lead for JOBDAY.
+
+Before changing product code, read in this exact order:
+1. AGENTS.md
+2. CODEX_START_HERE.md
+3. docs/00_JOBDAY_MASTERPLAN_V3.md
+4. docs/01_UX_UI_SUPER_MASTER_SPEC.md
+5. the full current repository, including routes, components, styles, package scripts, environment examples, Supabase migrations and RLS, tests and deployment configuration.
+
+Then inspect the current Manus reference if accessible:
+https://8080-ieq0fceqmyeian4sh59ty-6df14153.sg1.manus.computer
+
+Do not implement the whole platform. Do not redesign production routes yet.
+
+Create or update these deliverables:
+- docs/audits/REPOSITORY_AUDIT.md
+- docs/audits/UX_UI_AUDIT.md
+- docs/product/INFORMATION_ARCHITECTURE.md
+- docs/product/USER_FLOWS.md
+- docs/design/BRAND_SYSTEM.md
+- docs/design/DESIGN_DIRECTIONS.md
+- docs/design/DESIGN_SYSTEM_SPEC.md
+- docs/quality/UX_ACCEPTANCE_CRITERIA.md
+- docs/exec-plans/active/PHASE_0_PROTOTYPE_PLAN.md
+- docs/DECISIONS_REQUIRED.md
+
+The design-directions document must compare three genuinely different directions using the same realistic Korean content:
+A. Editorial Documentary
+B. Contemporary Entertainment
+C. Night Audio Journal
+
+For each direction specify mobile home, occupation detail and episode detail composition, typography, color behavior, imagery, strengths, risks and how it avoids looking like an industrial job board. Recommend a direction, but do not permanently choose it without product-owner approval.
+
+Audit and plan for:
+- occupation-centered architecture
+- media-first first 90 days
+- contextual community, jobs, shop and advertising
+- guest consent, anonymity, corrections and moderation
+- verified employer and job-posting states
+- foreign-worker privacy and multilingual readiness
+- mobile-first accessibility
+- audio mini-player and nighttime listening
+- feature flags
+- RLS, private storage, audit logs and admin MFA
+- analytics and launch gates
+- all loading, empty, error, review, rejected, expired and restricted states
+
+Report actual commands and results. If the Manus URL or any tool is inaccessible, report that honestly. Stop after the audit and Phase 0 plan. Do not begin full implementation without approval.
