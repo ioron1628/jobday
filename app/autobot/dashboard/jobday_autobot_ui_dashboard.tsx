@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import AgentCard from '../../components/autobot/AgentCard'; // Adjust path as needed
-import { Agent } from '../../types/autobot'; // Adjust path as needed
+import AgentCard from "@/components/autobot/AgentCard";
+import type { Agent } from "@/types/autobot";
 
 const AutobotDashboard: React.FC = () => {
   const [agents, setAgents] = useState<Agent[]>([]);

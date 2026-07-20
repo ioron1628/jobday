@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import ScheduleCard from '../../components/autobot/ScheduleCard'; // Adjust path as needed
-import { Schedule } from '../../types/autobot'; // Adjust path as needed
+import ScheduleCard from "@/components/autobot/ScheduleCard";
+import type { Schedule } from "@/types/autobot";
 
 const AutobotSchedules: React.FC = () => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);

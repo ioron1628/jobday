@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import TaskCard from '../../components/autobot/TaskCard'; // Adjust path as needed
-import { Task } from '../../types/autobot'; // Adjust path as needed
+import TaskCard from "@/components/autobot/TaskCard";
+import type { Task } from "@/types/autobot";
 
 const AutobotTasks: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

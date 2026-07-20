@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import ScheduleCard from '../../components/autobot/ScheduleCard'; // Adjust path as needed
-import { Schedule } from '../../types/autobot'; // Adjust path as needed
+import ScheduleCard from "@/components/autobot/ScheduleCard";
+import type { Schedule } from "@/types/autobot";
 
 const AutobotSchedules: React.FC = () => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -66,4 +68,15 @@ const AutobotSchedules: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {schedules.map((schedule) => (
           <ScheduleCard key={schedule.id} schedule={schedule} onViewDetails={handleViewDetails} onToggleEnabled={handleToggleEnabled} />
+        ))}
+      </div>
+      {schedules.length === 0 && (
+        <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+          No schedules found. Create a new schedule to automate tasks!
+        </div>
+      )}
+    </div>
+  );
+};
 
+export default AutobotSchedules;
