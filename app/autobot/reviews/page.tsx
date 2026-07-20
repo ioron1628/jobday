@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import { Review } from '../../types/autobot'; // Adjust path as needed
+import type { Review } from "@/types/autobot";
 
 const AutobotReviews: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -66,20 +68,51 @@ const AutobotReviews: React.FC = () => {
 
   if (loading) {
     return <div className="text-center py-8">Loading reviews...</div>;
-    return NextResponse.json({ error: "Review not found or no changes" }, { status: 404 });
   }
-
-  return NextResponse.json(data[0]);
-}
-
-export async function DELETE_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const { error } = await supabase.from("reviews").delete().eq("id", id);
 
   if (error) {
-    console.error("Error deleting review:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>;
   }
 
-  return NextResponse.json({ message: "Review deleted successfully" }, { status: 204 });
-}
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">AutoBot Reviews</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {reviews.map((review) => (
+          <div key={review.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Task ID: {review.task_id}</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">Reviewer ID: {review.reviewer_id}</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">Status: {review.status}</p>
+            {review.comments && <p className="text-gray-600 dark:text-gray-400 text-sm">Comments: {review.comments}</p>}
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-2">Created: {new Date(review.created_at).toLocaleString()}</p>
+            <div className="mt-4 flex space-x-2">
+              {review.status === 'pending' && (
+                <>
+                  <button
+                    onClick={() => handleApprove(review.id)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleReject(review.id)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  >
+                    Reject
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      {reviews.length === 0 && (
+        <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+          No reviews found. All tasks are approved or no tasks require review.
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AutobotReviews;

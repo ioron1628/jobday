@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import { SeoAnalytics } from '../../types/autobot'; // Adjust path as needed
+import type { SeoAnalytics } from "@/types/autobot";
 
 const AutobotSeoAnalytics: React.FC = () => {
   const [seoData, setSeoData] = useState<SeoAnalytics[]>([]);
@@ -10,7 +12,7 @@ const AutobotSeoAnalytics: React.FC = () => {
     const fetchSeoData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/autobot/analytics/seo');
+        const response = await fetch('/api/autobot/seo');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -72,24 +74,4 @@ const AutobotSeoAnalytics: React.FC = () => {
   );
 };
 
-export default AutobotSeoAnalytics;    console.error("Error updating SEO analytics data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-  if (!data || data.length === 0) {
-    return NextResponse.json({ error: "SEO analytics data not found or no changes" }, { status: 404 });
-  }
-
-  return NextResponse.json(data[0]);
-}
-
-export async function DELETE_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const { error } = await supabase.from("seo_analytics").delete().eq("id", id);
-
-  if (error) {
-    console.error("Error deleting SEO analytics data:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ message: "SEO analytics data deleted successfully" }, { status: 204 });
-}
+export default AutobotSeoAnalytics;

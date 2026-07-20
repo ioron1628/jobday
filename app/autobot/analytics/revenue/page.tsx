@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import { Revenue } from '../../types/autobot'; // Adjust path as needed
+import type { Revenue } from "@/types/autobot";
 
 const AutobotRevenue: React.FC = () => {
   const [revenueData, setRevenueData] = useState<Revenue[]>([]);
@@ -10,7 +12,7 @@ const AutobotRevenue: React.FC = () => {
     const fetchRevenueData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/autobot/analytics/revenue');
+        const response = await fetch('/api/autobot/revenue');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
