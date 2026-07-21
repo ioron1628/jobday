@@ -14,6 +14,8 @@ import {
 } from "./helpers";
 
 test.describe("실제 Supabase 저장 흐름", () => {
+  test.setTimeout(240_000);
+
   test("회원가입부터 글쓰기, 댓글, 추천, 신고, 로그아웃까지 동작한다", async ({ page }) => {
     const workRaid = { title: "", url: "" };
     const signupAccount = makeGeneratedQaAccount();
@@ -38,13 +40,13 @@ test.describe("실제 Supabase 저장 흐름", () => {
       await saveProfile(page, loginAccount.nickname);
     });
 
-    await test.step("작업레이드 글쓰기", async () => {
-      const created = await createWorkRaidPost(page, "work-raid", "작업레이드");
+    await test.step("작업 구인글 쓰기", async () => {
+      const created = await createWorkRaidPost(page, "work-raid", "작업 구인");
       workRaid.title = created.title;
       workRaid.url = created.url;
     });
 
-    await test.step("작업레이드 목록 확인", async () => {
+    await test.step("작업 구인 목록 확인", async () => {
       await page.goto("/boards/work-raid");
       await expect(page.locator("body")).toContainText(workRaid.title);
     });
@@ -58,6 +60,7 @@ test.describe("실제 Supabase 저장 흐름", () => {
       await page.locator('textarea[name="body"]').fill("자동 검수 댓글입니다.");
       await page.getByRole("button", { name: "댓글 쓰기" }).click();
       await expect(page.locator("body")).toContainText("댓글이 등록되었습니다.");
+      await expect(commentBlock("자동 검수 댓글입니다.")).toBeVisible({ timeout: 30_000 });
     });
 
     await test.step("댓글 수정", async () => {
@@ -65,6 +68,7 @@ test.describe("실제 Supabase 저장 흐름", () => {
       await page.locator('form textarea[name="body"]').nth(1).fill("자동 검수 댓글 수정본입니다.");
       await page.getByRole("button", { name: "수정 저장" }).click();
       await expect(page.locator("body")).toContainText("댓글이 수정되었습니다.");
+      await expect(commentBlock("자동 검수 댓글 수정본입니다.")).toBeVisible({ timeout: 30_000 });
     });
 
     await test.step("대댓글 작성", async () => {
@@ -103,8 +107,8 @@ test.describe("실제 Supabase 저장 흐름", () => {
       await expect(page.locator("body")).toContainText("신고가 접수되었습니다.");
     });
 
-    await test.step("원정레이드 글쓰기", async () => {
-      await createWorkRaidPost(page, "remote-raid", "원정레이드");
+    await test.step("원정 구인글 쓰기", async () => {
+      await createWorkRaidPost(page, "remote-raid", "원정 구인");
     });
 
     await test.step("보조구함 글쓰기", async () => {

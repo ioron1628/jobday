@@ -2,8 +2,8 @@ import { expect, type Page } from "@playwright/test";
 
 export const requiredBoards = [
   "현장자유",
-  "작업레이드",
-  "원정레이드",
+  "작업 구인",
+  "원정 구인",
   "보조구함",
   "오늘일당가능",
   "공구장터",
@@ -135,16 +135,25 @@ type PostResult = {
 };
 
 async function waitForCreatedPost(page: Page, title: string) {
-  try {
-    await expect(page.locator("body")).toContainText("저장됐습니다.");
-    await page.getByRole("link", { name: "작성한 글 보기" }).click();
-    await page.waitForURL(/\/posts\/[0-9a-f-]+$/, { timeout: 20_000 });
-  } catch {
-    const bodyText = await page.locator("body").innerText().catch(() => "");
-    throw new Error(`글 저장 후 상세 페이지로 이동하지 않았습니다. 현재 주소: ${page.url()} / 화면 안내: ${bodyText.slice(0, 1000)}`);
+  const postUrlPattern = /\/posts\/[0-9a-f-]+$/;
+
+  if (!postUrlPattern.test(page.url())) {
+    try {
+      await expect(page.locator("body")).toContainText("저장됐습니다.", { timeout: 30_000 });
+      await page.getByRole("link", { name: "작성한 글 보기" }).click();
+      await page.waitForURL(postUrlPattern, { timeout: 30_000 });
+    } catch {
+      const bodyText = await page.locator("body").innerText().catch(() => "");
+      throw new Error(`글 저장 후 상세 페이지로 이동하지 않았습니다. 현재 주소: ${page.url()} / 화면 안내: ${bodyText.slice(0, 1000)}`);
+    }
   }
 
-  await expect(page.locator("body")).toContainText(title);
+  try {
+    await expect(page.locator("body")).toContainText(title, { timeout: 45_000 });
+  } catch {
+    const bodyText = await page.locator("body").innerText().catch(() => "");
+    throw new Error(`작성한 글 상세를 불러오지 못했습니다. 현재 주소: ${page.url()} / 화면 안내: ${bodyText.slice(0, 1000)}`);
+  }
 }
 
 async function completeCommonPostFields(page: Page, title: string) {
@@ -152,7 +161,7 @@ async function completeCommonPostFields(page: Page, title: string) {
   await page.locator("#body").fill(`${title}\n자동 검수용 게시글입니다.`);
 }
 
-export async function createWorkRaidPost(page: Page, boardSlug = "work-raid", prefix = "작업레이드") {
+export async function createWorkRaidPost(page: Page, boardSlug = "work-raid", prefix = "작업 구인") {
   const title = `${prefix} 자동검수 ${Date.now()}`;
   await page.goto(`/boards/${boardSlug}/new`);
   await expect(page.locator("#board_slug")).toHaveValue(boardSlug);
@@ -189,7 +198,7 @@ export async function createWorkRaidPost(page: Page, boardSlug = "work-raid", pr
     await beginner.check();
   }
 
-  await clickSubmit(page, boardSlug === "remote-raid" ? "원정레이드 올리기" : "작업레이드 올리기");
+  await clickSubmit(page, boardSlug === "remote-raid" ? "원정 구인글 올리기" : "작업 구인글 올리기");
   await waitForCreatedPost(page, title);
   return { title, url: page.url() } satisfies PostResult;
 }

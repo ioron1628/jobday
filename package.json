@@ -2,15 +2,16 @@
   "name": "jobil-mvp",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "qa:check": "node scripts/check-supabase.mjs",
-    "smoke": "playwright test smoke.spec.ts",
-    "e2e": "playwright test mvp-flow.spec.ts",
+    "smoke": "playwright test tests/e2e/smoke.spec.ts",
+    "e2e": "playwright test --grep '실제 Supabase 저장 흐름'",
     "qa": "node scripts/check-supabase.mjs && playwright test"
   },
   "dependencies": {
