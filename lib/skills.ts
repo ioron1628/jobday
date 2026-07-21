@@ -41,7 +41,7 @@ export const skillLessons: SkillLesson[] = [
     tools: ["안전화", "장갑", "작업복", "줄자"],
     summary: "처음 현장에 가기 전 챙겨야 할 물건, 말투, 쉬는 시간, 연락 방법을 정리합니다.",
     whatYouLearn: ["처음 현장에 가져가야 할 준비물", "반장과 팀원에게 물어볼 기본 질문", "출근 전 확인해야 할 조건", "개인 연락처 공개 시 주의점"],
-    recommendedFor: ["지인 라인 없이 현장에 처음 들어가려는 사람", "작업레이드 글을 보고 연락하기 전인 초보", "현장 용어와 분위기가 낯선 사람"],
+    recommendedFor: ["지인 라인 없이 현장에 처음 들어가려는 사람", "작업 구인글을 보고 연락하기 전인 초보", "현장 용어와 분위기가 낯선 사람"],
     curriculum: ["현장 첫날 체크리스트", "작업복과 안전화 고르는 기준", "점심·휴식·퇴근 전 기본 매너", "일당과 숙소 조건 확인법"],
     instructorBio: "여러 현장을 다니며 초보 작업자 입문 질문을 정리해 온 운영진 큐레이션 강의입니다.",
     relatedLinks: [
@@ -66,7 +66,7 @@ export const skillLessons: SkillLesson[] = [
     curriculum: ["타일 현장의 역할 구분", "자재와 공구 위치 잡기", "물·접착제·줄눈 보조 흐름", "마감 후 정리 기준"],
     instructorBio: "아파트와 상가 타일 현장을 오래 다닌 기공이 초보 보조 기준으로 설명합니다.",
     relatedLinks: [
-      { label: "타일 작업레이드 보기", href: "/boards/work-raid?trade=%ED%83%80%EC%9D%BC" },
+      { label: "타일 작업 구인글 보기", href: "/boards/work-raid?trade=%ED%83%80%EC%9D%BC" },
       { label: "공구장터 보기", href: "/boards/tool-market" }
     ],
     popular: true

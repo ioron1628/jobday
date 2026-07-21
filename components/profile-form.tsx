@@ -276,7 +276,7 @@ export function ProfileForm({ regions, trades, initialMessage = "" }: Props) {
           </div>
         ) : (
           <div className="p-3">
-            <EmptyState title="아직 작성한 글이 없습니다" body="작업레이드, 공구장터, 현장질문 중 필요한 게시판에 첫 글을 올려보세요." href="/write" actionLabel="글쓰기" />
+            <EmptyState title="아직 작성한 글이 없습니다" body="구인글, 공구장터, 현장질문 중 필요한 게시판에 첫 글을 올려보세요." href="/write" actionLabel="글쓰기" />
           </div>
         )}
       </section>
