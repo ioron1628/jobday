@@ -15,7 +15,7 @@ export default function PostDetailErrorPage({ reset }: { reset: () => void }) {
           게시판 보기
         </ButtonLink>
         <ButtonLink href="/boards/work-raid" size="md">
-          작업레이드 보기
+          작업 구인 보기
         </ButtonLink>
       </div>
     </section>

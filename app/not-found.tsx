@@ -21,11 +21,11 @@ export default function NotFoundPage() {
           <ButtonLink href="/" variant="primary" size="lg" fullWidth>
             홈으로 이동
           </ButtonLink>
-          <ButtonLink href="/boards" size="lg" fullWidth>
-            게시판 보기
+          <ButtonLink href="/listen" size="lg" fullWidth>
+            방송 듣기
           </ButtonLink>
-          <ButtonLink href="/boards/work-raid" size="lg" fullWidth>
-            작업레이드 보기
+          <ButtonLink href="/occupations" size="lg" fullWidth>
+            직업 찾기
           </ButtonLink>
         </div>
 

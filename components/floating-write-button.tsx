@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { Icon } from "./design-system";
 
 const hiddenPrefixes = [
+  "/shop",
+  "/skills",
   "/write",
   "/login",
   "/signup",
@@ -24,7 +26,10 @@ function writeHref(pathname: string) {
 
 export function FloatingWriteButton() {
   const pathname = usePathname();
+  const isCommunitySurface = pathname.startsWith("/boards") || pathname.startsWith("/posts");
   const hidden =
+    !isCommunitySurface ||
+    pathname === "/" ||
     hiddenPrefixes.some((prefix) => pathname.startsWith(prefix)) ||
     pathname.endsWith("/new") ||
     pathname.includes("/edit");

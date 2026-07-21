@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../jobday_autobot_supabase_client';
-import { SnsDistribution } from '../../jobday_autobot_types';
+import { supabase } from "@/lib/autobot/supabaseClient";
+import type { SnsDistribution } from "@/types/autobot";
 
 // 모든 SNS 배포 기록 조회 또는 기록 생성
 export async function GET(req: NextRequest) {
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
 // 특정 SNS 배포 기록 조회, 수정, 삭제 (동적 라우트)
 // 이 파일은 /app/api/autobot/sns/[id]/route.ts 로 사용될 예정입니다.
-export async function GET_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
+async function GET_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data, error } = await supabase.from("sns_distributions").select("*").eq("id", id).single();
 
@@ -56,7 +56,7 @@ export async function GET_BY_ID(req: NextRequest, { params }: { params: { id: st
   return NextResponse.json(data);
 }
 
-export async function PUT_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
+async function PUT_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
   const updates: Partial<SnsDistribution> = await req.json();
   const { data, error } = await supabase.from("sns_distributions").update(updates).eq("id", id).select();
@@ -72,7 +72,7 @@ export async function PUT_BY_ID(req: NextRequest, { params }: { params: { id: st
   return NextResponse.json(data[0]);
 }
 
-export async function DELETE_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
+async function DELETE_BY_ID(req: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
   const { error } = await supabase.from("sns_distributions").delete().eq("id", id);
 

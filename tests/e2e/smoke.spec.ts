@@ -1,35 +1,22 @@
 import { expect, test } from "@playwright/test";
-import { expectNoPageError, requiredBoards } from "./helpers";
+import { expectNoPageError } from "./helpers";
 
-const coreRoutes = [
+const phase0Routes = [
   "/",
-  "/boards",
-  "/boards/work-raid",
-  "/boards/remote-raid",
-  "/boards/dimodo",
-  "/boards/available-today",
-  "/boards/tool-market",
-  "/boards/materials",
-  "/boards/work-raid/new",
-  "/boards/remote-raid/new",
-  "/boards/dimodo/new",
-  "/boards/available-today/new",
-  "/boards/tool-market/new",
-  "/boards/materials/new",
-  "/write?board=work-raid",
-  "/write?board=tool-market",
-  "/write?board=materials",
+  "/listen",
+  "/episodes/field-first-day",
+  "/podcast",
+  "/podcast/field-first-day",
+  "/podcast/submit",
+  "/podcast/creators",
+  "/occupations",
+  "/occupations/graph",
+  "/occupations/site-helper",
+  "/occupations/logistics-night",
+  "/career-moat",
   "/login",
   "/signup",
   "/mypage",
-  "/admin",
-  "/admin/posts",
-  "/admin/reports",
-  "/admin/comments",
-  "/admin/users",
-  "/admin/notices",
-  "/admin/promotions",
-  "/admin/banners",
   "/terms",
   "/privacy",
   "/disclaimer",
@@ -37,24 +24,39 @@ const coreRoutes = [
   "/community-rules"
 ];
 
-test.describe("기본 화면 검수", () => {
-  test("핵심 주소가 열린다", async ({ page }) => {
-    for (const route of coreRoutes) {
-      await page.goto(route);
-      await expectNoPageError(page);
+const disabledByDefaultRoutes = ["/boards", "/boards/work-raid", "/write", "/jobs", "/shop", "/business", "/business/command-center", "/membership", "/skills"];
+
+test.describe("Phase 0 기본 화면 검수", () => {
+  test("Phase 0 핵심 주소가 열린다", async ({ request }) => {
+    for (const route of phase0Routes) {
+      const response = await request.get(route);
+      expect(response.ok(), `${route} 주소가 정상 응답해야 합니다.`).toBe(true);
+      const body = await response.text();
+      expect(body).not.toContain("Application error");
+      expect(body).not.toContain("Unhandled Runtime Error");
     }
   });
 
-  test("게시판 11개가 보인다", async ({ page }) => {
-    await page.goto("/boards");
-    for (const board of requiredBoards) {
-      await expect(page.locator("body")).toContainText(board);
+  test("홈에서 공개 핵심 행동이 보인다", async ({ page }) => {
+    await page.goto("/");
+    await expectNoPageError(page);
+    await expect(page.locator("body")).toContainText("방송 듣기");
+    await expect(page.locator("body")).toContainText("직업 찾기");
+    await expect(page.locator("body")).toContainText("일자리 찾기");
+    await expect(page.locator("body")).toContainText("출연 신청");
+    await expect(page.locator("body")).toContainText("Season 0");
+  });
+
+  test("직업 허브 seed가 보인다", async ({ page }) => {
+    await page.goto("/occupations");
+    for (const occupation of ["야간 물류", "현장 보조", "원정 작업", "매장 근무", "기술 직종", "프리랜서의 하루"]) {
+      await expect(page.locator("body")).toContainText(occupation);
     }
   });
 
-  test("모바일 주요 화면이 열린다", async ({ page }) => {
+  test("모바일 Phase 0 주요 화면이 열린다", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    for (const route of ["/", "/boards", "/boards/work-raid", "/boards/work-raid/new", "/boards/remote-raid/new", "/boards/available-today/new"]) {
+    for (const route of ["/", "/listen", "/episodes/field-first-day", "/occupations", "/occupations/site-helper", "/career-moat", "/podcast/submit"]) {
       await page.goto(route);
       await expectNoPageError(page);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
@@ -62,44 +64,10 @@ test.describe("기본 화면 검수", () => {
     }
   });
 
-  test("글쓰기 전용 필드가 보인다", async ({ page }) => {
-    await page.goto("/boards/work-raid/new");
-    await expect(page.locator("#extra-site_region")).toBeVisible();
-    await expect(page.locator("#extra-work_date")).toBeVisible();
-    await expect(page.locator("#extra-needed_count")).toBeVisible();
-    await expect(page.locator("#extra-daily_pay")).toBeVisible();
-
-    await page.goto("/boards/remote-raid/new");
-    await expect(page.locator("#extra-lodging_provided")).toBeVisible();
-    await expect(page.locator("#extra-transportation_provided")).toBeVisible();
-    await expect(page.locator("#extra-ride_share_available")).toBeVisible();
-
-    await page.goto("/boards/dimodo/new");
-    await expect(page.locator("#extra-site_region")).toBeVisible();
-    await expect(page.locator("#extra-needed_count")).toBeVisible();
-    await expect(page.locator("#extra-contact_method")).toBeVisible();
-
-    await page.goto("/boards/available-today/new");
-    await expect(page.locator("#extra-available_region")).toBeVisible();
-    await expect(page.locator("#extra-available_date")).toBeVisible();
-    await expect(page.locator("#extra-can_travel")).toBeVisible();
-
-    await page.goto("/boards/tool-market/new");
-    await expect(page.locator("#extra-tool_name")).toBeVisible();
-    await expect(page.locator("#extra-transaction_type")).toBeVisible();
-    await expect(page.locator("#extra-price")).toBeVisible();
-
-    await page.goto("/boards/materials/new");
-    await expect(page.locator("#extra-material_name")).toBeVisible();
-    await expect(page.locator("#extra-quantity")).toBeVisible();
-    await expect(page.locator("#extra-direct_trade")).toBeVisible();
-  });
-
-  test("비로그인 사용자는 관리자 화면에서 차단된다", async ({ page }) => {
-    for (const route of ["/admin", "/admin/posts", "/admin/reports", "/admin/comments", "/admin/users", "/admin/notices", "/admin/promotions", "/admin/banners"]) {
-      await page.goto(route);
-      await expectNoPageError(page);
-      await expect(page.locator("body")).toContainText(/로그인이 필요합니다|관리자 권한이 필요합니다|접근할 수 없습니다/);
+  test("검증 전 모듈은 기본값에서 공개되지 않는다", async ({ request }) => {
+    for (const route of disabledByDefaultRoutes) {
+      const response = await request.get(route);
+      expect(response.status(), `${route} 주소는 기본값에서 숨겨져야 합니다.`).toBe(404);
     }
   });
 });

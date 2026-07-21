@@ -38,8 +38,7 @@
   ],
   "exclude": [
     "node_modules",
-    ".next",
-    "**/jobday_autobot_*.ts",
-    "**/jobday_autobot_*.tsx"
+    ".next/types/**/* *.ts",
+    ".next/dev/types/**/* *.ts"
   ]
 }

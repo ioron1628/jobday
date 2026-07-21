@@ -101,8 +101,8 @@ const REQUIRED_FIELDS_BY_BOARD: Record<string, string[]> = {
 };
 
 const SUBMIT_LABEL_BY_BOARD: Record<string, string> = {
-  "work-raid": "작업레이드 올리기",
-  "remote-raid": "원정레이드 올리기",
+  "work-raid": "작업 구인글 올리기",
+  "remote-raid": "원정 구인글 올리기",
   dimodo: "보조 구인글 올리기",
   "available-today": "일당 가능글 올리기",
   "tool-market": "공구글 올리기",
@@ -356,7 +356,7 @@ function WritingGuides({ boardSlug }: { boardSlug: string }) {
   return (
     <section className="space-y-2">
       {isWork && !isRemote ? (
-        <NoticeBox collapsible tone="muted" title="작업레이드 체크리스트">
+        <NoticeBox collapsible tone="muted" title="작업 구인글 체크리스트">
           <ChecklistItems
             items={[
               "현장지역, 작업날짜, 직종, 필요인원, 일당을 빠짐없이 적었는지 확인하세요.",

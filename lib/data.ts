@@ -13,6 +13,14 @@ function withImageUrls(images: PostImage[] | null | undefined): PostImage[] {
 }
 
 function normalizeBoard(board: Board): Board {
+  if (board.slug === "work-raid") {
+    return { ...board, name: "작업 구인", description: "단기 작업과 인원 모집 정보를 공유하는 게시판" };
+  }
+
+  if (board.slug === "remote-raid") {
+    return { ...board, name: "원정 구인", description: "숙식, 이동, 장거리 작업 정보를 공유하는 게시판" };
+  }
+
   if (board.slug !== "dimodo") return board;
 
   return {

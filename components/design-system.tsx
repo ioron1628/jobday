@@ -36,6 +36,7 @@ export type IconName =
   | "pencil"
   | "people"
   | "pin"
+  | "play"
   | "plus"
   | "question"
   | "reply"
@@ -262,6 +263,8 @@ function iconContent(name: IconName) {
           <path d="M12 15v6" />
         </>
       );
+    case "play":
+      return <path d="m8 5 11 7-11 7V5Z" />;
     case "plus":
       return (
         <>
@@ -900,7 +903,7 @@ export function NoticeBox({
 
 function sectionIcon(title: string): IconName {
   if (title.includes("검색")) return "search";
-  if (title.includes("작업") || title.includes("레이드")) return "lightning";
+  if (title.includes("작업") || title.includes("구인")) return "lightning";
   if (title.includes("원정")) return "compass";
   if (title.includes("보조") || title.includes("일당")) return "briefcase";
   if (title.includes("공구")) return "tool";
@@ -913,7 +916,7 @@ function sectionIcon(title: string): IconName {
 }
 
 function sectionTone(title: string): VisualTone {
-  if (title.includes("작업") || title.includes("레이드") || title.includes("보조") || title.includes("일당")) return "work";
+  if (title.includes("작업") || title.includes("구인") || title.includes("보조") || title.includes("일당")) return "work";
   if (title.includes("공구") || title.includes("자재") || title.includes("거래")) return "market";
   if (title.includes("초보") || title.includes("입문")) return "guide";
   if (title.includes("공지") || title.includes("안내")) return "muted";
@@ -1216,9 +1219,9 @@ export function BottomNavItem({ href, label, icon }: { href: string; label: stri
   return (
     <Link
       href={href}
-      className="flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-[13px] font-bold leading-none text-muted active:bg-amber-50"
+      className="flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-[11px] font-semibold leading-none text-muted active:bg-accent-soft"
     >
-      <AppIcon name={icon} tone="accent" size="sm" />
+      <AppIcon name={icon} tone="default" size="md" className="stroke-[1.6]" />
       <span>{label}</span>
     </Link>
   );

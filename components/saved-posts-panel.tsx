@@ -51,7 +51,7 @@ export function SavedPostsPanel() {
         </NoticeBox>
       ) : !userId ? (
         <NoticeBox className="m-3" tone="muted" title="로그인 후 볼 수 있습니다">
-          <p>로그인하면 저장한 작업레이드, 공구글, 자재글을 마이페이지에서 다시 볼 수 있습니다.</p>
+          <p>로그인하면 저장한 구인글, 공구글, 자재글을 마이페이지에서 다시 볼 수 있습니다.</p>
         </NoticeBox>
       ) : posts.length ? (
         <div className="divide-y divide-slate-200">
@@ -79,9 +79,9 @@ export function SavedPostsPanel() {
         <div className="p-3">
           <EmptyState
             title="저장한 글 없음"
-            body="작업레이드, 공구글, 자재글에서 글 저장을 누르면 이곳에 모입니다."
+            body="구인글, 공구글, 자재글에서 글 저장을 누르면 이곳에 모입니다."
             href="/boards/work-raid"
-            actionLabel="작업레이드 보기"
+            actionLabel="작업 구인 보기"
           />
         </div>
       )}

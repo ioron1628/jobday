@@ -9,7 +9,27 @@ export type BoardCategory =
 
 export type PostStatus = "recruiting" | "closed" | "hidden" | "deleted";
 export type CommentStatus = "published" | "hidden" | "deleted";
-export type ProfileRole = "user" | "company" | "admin";
+export type ProfileRole =
+  | "user"
+  | "member"
+  | "verified_worker"
+  | "company"
+  | "employer_member"
+  | "creator"
+  | "editor"
+  | "moderator"
+  | "admin";
+
+export type FeatureFlagKey =
+  | "media"
+  | "community"
+  | "jobs"
+  | "shop"
+  | "business_ads"
+  | "membership"
+  | "internal_apply"
+  | "multilingual"
+  | "native_payments";
 
 export type JsonValue =
   | string
@@ -36,6 +56,41 @@ export type Profile = {
   is_premium_company: boolean;
   created_at: string;
   updated_at: string;
+};
+
+export type OccupationRecord = {
+  id: string;
+  slug: string;
+  name: string;
+  industry: string;
+  headline: string;
+  description: string;
+  audience: string | null;
+  status: "draft" | "published" | "hidden" | "archived";
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type FeatureFlagRecord = {
+  flag_key: FeatureFlagKey;
+  label: string;
+  description: string | null;
+  phase: "phase_0" | "post_phase_0" | "post_beta";
+  is_enabled: boolean;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AuditLog = {
+  id: string;
+  actor_id: string | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
 };
 
 export type Board = {

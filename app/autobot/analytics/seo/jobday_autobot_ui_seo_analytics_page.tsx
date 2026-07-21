@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import { SeoAnalytics } from '../../types/autobot'; // Adjust path as needed
+import type { SeoAnalytics } from "@/types/autobot";
 
 const AutobotSeoAnalytics: React.FC = () => {
   const [seoData, setSeoData] = useState<SeoAnalytics[]>([]);
@@ -10,7 +12,7 @@ const AutobotSeoAnalytics: React.FC = () => {
     const fetchSeoData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/autobot/analytics/seo');
+        const response = await fetch('/api/autobot/seo');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

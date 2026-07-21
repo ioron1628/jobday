@@ -96,8 +96,8 @@ function boardListHref(slug: string, filters: BoardFilterValues) {
 }
 
 function writeButtonLabel(slug: string, fallbackName: string) {
-  if (slug === "work-raid") return "작업레이드 올리기";
-  if (slug === "remote-raid") return "원정레이드 올리기";
+  if (slug === "work-raid") return "작업 구인글 올리기";
+  if (slug === "remote-raid") return "원정 구인글 올리기";
   if (slug === "dimodo") return "보조글 올리기";
   if (slug === "available-today") return "일당 가능글 올리기";
   if (slug === "tool-market") return "공구글 올리기";
@@ -226,7 +226,7 @@ export default async function BoardDetailPage({
         <section className="space-y-2">
           {pinnedPosts.length ? (
             <div className="border border-yellow-300 bg-yellow-50">
-              <SectionHeader title="상단고정/급구 작업레이드" count={`${pinnedPosts.length}개`} />
+              <SectionHeader title="상단고정/급구 구인글" count={`${pinnedPosts.length}개`} />
               <div className="border-t border-yellow-200">
                 {pinnedPosts.map((post) => (
                   <PostCard key={post.id} post={post} fromHref={currentListHref} />

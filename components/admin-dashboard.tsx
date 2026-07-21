@@ -61,7 +61,7 @@ const adminNav: { section: AdminSection; href: string; label: string }[] = [
 const promotionPlacements = [
   { value: "home_top", label: "홈 상단" },
   { value: "board_top", label: "게시판 상단" },
-  { value: "urgent_raid", label: "긴급 작업레이드" },
+  { value: "urgent_raid", label: "긴급 구인글" },
   { value: "market_top", label: "마켓 상단" }
 ];
 
@@ -1187,7 +1187,7 @@ export function AdminDashboard({ section = "overview" }: { section?: AdminSectio
         ) : null}
 
         {section === "reports" ? <AdminCard title="신고 목록" description="신고됐다고 자동 삭제하지 않고 운영자가 숨김/삭제 여부를 판단합니다.">{renderReports()}</AdminCard> : null}
-        {section === "posts" ? <AdminCard title="게시글 관리" description="게시글 숨김, 숨김해제, 작업레이드 마감, 삭제 처리를 합니다.">{renderPosts()}</AdminCard> : null}
+        {section === "posts" ? <AdminCard title="게시글 관리" description="게시글 숨김, 숨김해제, 구인글 마감, 삭제 처리를 합니다.">{renderPosts()}</AdminCard> : null}
         {section === "comments" ? <AdminCard title="댓글 관리" description="문제 댓글은 삭제 상태로 바꿉니다.">{renderComments()}</AdminCard> : null}
         {section === "users" ? (
           <>

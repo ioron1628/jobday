@@ -18,7 +18,7 @@ export const mockBoards: Board[] = [
   {
     id: "mock-board-work-raid",
     slug: "work-raid",
-    name: "작업레이드",
+    name: "작업 구인",
     description: "단기 작업, 급한 인원 모집성 정보를 공유하는 게시판",
     category: "work",
     sort_order: 20,
@@ -30,7 +30,7 @@ export const mockBoards: Board[] = [
   {
     id: "mock-board-remote-raid",
     slug: "remote-raid",
-    name: "원정레이드",
+    name: "원정 구인",
     description: "숙식, 이동, 장거리 작업 정보를 공유하는 게시판",
     category: "work",
     sort_order: 30,
@@ -210,7 +210,7 @@ export const mockPosts: Post[] = [
   createMockPost({
     id: "mock-post-work-raid",
     boardSlug: "work-raid",
-    title: "경기 화성 전기 조공 3명 작업레이드",
+    title: "경기 화성 전기 조공 3명 구인",
     body: "화면 확인용 예시 글입니다. 실제 조건은 작성자와 직접 확인해야 합니다.",
     region: "경기 화성",
     trade: "전기 조공",
@@ -343,7 +343,7 @@ export const mockComments: Comment[] = [
     status: "published",
     created_at: MOCK_TIME,
     updated_at: MOCK_TIME,
-    author: { id: "mock-profile-commenter", nickname: "댓글테스터" }
+    author: { id: "mock-profile-commenter", nickname: "현장동료" }
   }
 ];
 
@@ -364,7 +364,7 @@ export const mockAdSlots: AdSlot[] = [
     id: "mock-ad-home",
     placement: "home_top",
     label: "홈 상단 배너",
-    description: "개발 확인용 광고 위치",
+    description: "광고 위치 준비 중",
     advertiser_name: null,
     sponsor_type: "general",
     target_region: null,
@@ -523,7 +523,7 @@ export const mockAdSlots: AdSlot[] = [
     id: "mock-ad-board",
     placement: "board_top",
     label: "게시판 상단 배너",
-    description: "개발 확인용 광고 위치",
+    description: "광고 위치 준비 중",
     advertiser_name: null,
     sponsor_type: "general",
     target_region: null,

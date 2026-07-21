@@ -36,6 +36,13 @@ class KoreanReporter {
   }
 
   onEnd(result) {
+    if ((this.total ?? 0) === 0 && result.status !== "passed") {
+      console.log("\nJOBDAY 자동 검수 결과: 확인 필요");
+      console.log("테스트를 시작하기 전에 개발 서버 실행 또는 Playwright 설정에서 문제가 발생했습니다.");
+      console.log("터미널의 WebServer 오류를 확인해주세요. 예: 포트 권한, 이미 사용 중인 포트, dev 서버 시작 실패\n");
+      return;
+    }
+
     const passed = Math.max((this.total ?? 0) - (this.failed ?? 0), 0);
     const status = result.status === "passed" ? "전체 성공" : "확인 필요";
     console.log(`\nJOBDAY 자동 검수 결과: ${status}`);
