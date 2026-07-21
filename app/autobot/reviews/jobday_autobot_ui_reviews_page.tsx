@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import { Review } from '../../types/autobot'; // Adjust path as needed
+import type { Review } from "@/types/autobot";
 
 const AutobotReviews: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);

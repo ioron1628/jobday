@@ -10,7 +10,7 @@ const sectionTitles: Record<AdminSection, { title: string; description: string }
   },
   posts: {
     title: "게시글 관리",
-    description: "게시글 숨김, 숨김해제, 작업레이드 마감 처리를 합니다."
+    description: "게시글 숨김, 숨김해제, 작업 구인글 마감 처리를 합니다."
   },
   reports: {
     title: "신고 관리",

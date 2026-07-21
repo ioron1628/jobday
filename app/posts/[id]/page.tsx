@@ -189,8 +189,8 @@ function RelatedPostList({ title, posts, fromHref }: { title: string; posts: Pos
 }
 
 function quickWriteLabel(boardSlug: string) {
-  if (boardSlug === "work-raid") return "작업레이드 올리기";
-  if (boardSlug === "remote-raid") return "원정레이드 올리기";
+  if (boardSlug === "work-raid") return "작업 구인글 올리기";
+  if (boardSlug === "remote-raid") return "원정 구인글 올리기";
   if (boardSlug === "dimodo") return "보조글 올리기";
   if (boardSlug === "available-today") return "일당 가능글 올리기";
   if (boardSlug === "tool-market") return "공구글 올리기";
@@ -357,9 +357,9 @@ export default async function PostDetailPage({
         ]
     : isWork
       ? [
-          { title: "같은 지역 작업레이드", posts: relatedByRegion(relatedBasePosts, siteRegion) },
-          { title: "같은 직종 작업레이드", posts: relatedByTrade(relatedBasePosts, trade) },
-          { title: "모집중인 작업레이드", posts: recruitingPosts(relatedBasePosts) },
+          { title: "같은 지역 작업 구인글", posts: relatedByRegion(relatedBasePosts, siteRegion) },
+          { title: "같은 직종 작업 구인글", posts: relatedByTrade(relatedBasePosts, trade) },
+          { title: "모집중인 작업 구인글", posts: recruitingPosts(relatedBasePosts) },
           { title: latestTitle, posts: relatedBasePosts }
         ]
       : [
